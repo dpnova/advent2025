@@ -33,14 +33,14 @@ export const day1 = Effect.gen(function* () {
   const dial = yield* makeDial
   const result = yield* Effect.forEach(input, (line) =>
     Match.value(line).pipe(
-      Match.when(isLeft, () =>
+      Match.when(isLeft, (l) =>
         dial
-          .left(Number(line.slice(1)))
+          .left(Number(l.slice(1)))
           .pipe(Effect.flatMap(() => dial.currentPosition)),
       ),
-      Match.when(isRight, () =>
+      Match.when(isRight, (r) =>
         dial
-          .right(Number(line.slice(1)))
+          .right(Number(r.slice(1)))
           .pipe(Effect.flatMap(() => dial.currentPosition)),
       ),
       Match.orElse(() => Effect.fail(new Error(`Invalid direction: ${line}`))),
