@@ -1,8 +1,11 @@
+/**
+ * Day 1: Simulating a Dial with Left and Right Turns
+ * I wanted to use a ref from Effect as I havent used them much yet.
+ * So it's a little longer than you'd expect ;)
+ */
 import { Array, Effect, Match, Ref } from 'effect'
 import { readFileSync } from 'node:fs'
 
-// load file from input.txt
-//
 const input = readFileSync('src/input.txt', 'utf-8')
   .split('\n')
   .filter((line) => line.length > 0)
