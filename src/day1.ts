@@ -21,13 +21,9 @@ class Dial {
 }
 const makeDial = Effect.andThen(Ref.make(50), (value) => new Dial(value))
 
-function isRight(c: string): boolean {
-  return c.startsWith('R')
-}
+const isRight = (c: string) => c.startsWith('R')
 
-function isLeft(c: string): boolean {
-  return c.startsWith('L')
-}
+const isLeft = (c: string) => c.startsWith('L')
 
 export const day1 = Effect.gen(function* () {
   const dial = yield* makeDial
