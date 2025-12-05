@@ -22,35 +22,29 @@ class Dial {
 const makeDial = Effect.andThen(Ref.make(50), (value) => new Dial(value))
 
 function isRight(c: string): boolean {
-  return c === 'R'
+  return c.startsWith('R')
 }
 
 function isLeft(c: string): boolean {
-  return c === 'L'
+  return c.startsWith('L')
 }
 
 export const day1 = Effect.gen(function* () {
   const dial = yield* makeDial
   const result = yield* Effect.forEach(input, (line) =>
-    Array.matchLeft(line.split(''), {
-      onEmpty: () => Effect.fail(new Error('Empty line')),
-      onNonEmpty: (head, tail) =>
-        Match.value(head).pipe(
-          Match.when(isLeft, () =>
-            dial
-              .left(Number(tail.join('')))
-              .pipe(Effect.flatMap(() => dial.currentPosition)),
-          ),
-          Match.when(isRight, () =>
-            dial
-              .right(Number(tail.join('')))
-              .pipe(Effect.flatMap(() => dial.currentPosition)),
-          ),
-          Match.orElse(() =>
-            Effect.fail(new Error(`Invalid direction: ${head}`)),
-          ),
-        ),
-    }),
+    Match.value(line).pipe(
+      Match.when(isLeft, () =>
+        dial
+          .left(Number(line.slice(1)))
+          .pipe(Effect.flatMap(() => dial.currentPosition)),
+      ),
+      Match.when(isRight, () =>
+        dial
+          .right(Number(line.slice(1)))
+          .pipe(Effect.flatMap(() => dial.currentPosition)),
+      ),
+      Match.orElse(() => Effect.fail(new Error(`Invalid direction: ${line}`))),
+    ),
   )
   const zeroCount = Array.countBy(result, (pos) => pos === 0)
   console.log(`Number of times dial at position 0: ${zeroCount}`)
